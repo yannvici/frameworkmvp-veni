@@ -4,7 +4,7 @@ import android.app.Application
 import com.hooooooo.android.veni.frameworkmvp.net.ServiceGenerator
 
 /**
- * Created by heyangpeng on 2022/10/28
+ * Created by yann on 2022/10/28
  * <p>
  * Describe:
  */
