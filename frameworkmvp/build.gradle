@@ -60,9 +60,9 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.github.frameworkmvp'
+                groupId = 'com.github.veni.frameworkmvp'
                 artifactId = 'frameworkmvp'
-                version = '1.0.0'
+                version = '1.0.1'
                 description = 'this is framework of mvp'
             }
         }
