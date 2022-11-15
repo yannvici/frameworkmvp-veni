@@ -1,12 +1,13 @@
 package com.hooooooo.android.veni.framework_mvp
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import com.hooooooo.android.veni.framework_mvp.MainContract.MainPresenter
 import com.hooooooo.android.veni.framework_mvp.databinding.ActivityMainBinding
-import com.hooooooo.android.veni.frameworkmvp.mvp.MvpActivity
 import com.hooooooo.android.veni.frameworkmvp.entry.StatusBarTheme
+import com.hooooooo.android.veni.frameworkmvp.mvp.MvpActivity
 import com.hooooooo.android.veni.frameworkmvp.net.ServiceGenerator
 
 class MainActivity : MvpActivity<MainActivity, ActivityMainBinding, MainPresenter>(), MainContract.IMain {
@@ -17,12 +18,15 @@ class MainActivity : MvpActivity<MainActivity, ActivityMainBinding, MainPresente
         presenter.test1(this)
         ServiceGenerator.createService(ApiService::class.java)
         Log.e("context", "$context")
-
+        viewBinding.main.setOnClickListener {
+            startActivity(Intent().setClass(this@MainActivity, RecyclerDiffActivity::class.java))
+        }
     }
 
     override fun setStatusBarTheme(): StatusBarTheme = StatusBarTheme(Color.WHITE, true)
     override fun test(string: String) {
         viewBinding.main.text = string
+
     }
 
     override fun createPresenter(): MainPresenter = MainPresenter()

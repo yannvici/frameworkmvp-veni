@@ -53,7 +53,7 @@ object ServiceGenerator {
     /**
      * 创建service实例
      */
-    fun <T> createService(serviceClass: Class<T>): T {
+    fun <T> createService(serviceClass: Class<T>): T? {
         val okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -76,12 +76,32 @@ object ServiceGenerator {
             //https支持
             hostnameVerifier((HostnameVerifier { _, _ -> true }))
         }
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClientBuilder.build())
-            .build()
-            .create(serviceClass)
+        return if (::baseUrl.isInitialized) {
+            Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build()
+                .create(serviceClass)
+        } else {
+            null
+        }
+
+//        return baseUrl?.let {
+//            Retrofit.Builder()
+//                .baseUrl(it)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .client(okHttpClientBuilder.build())
+//                .build()
+//                .create(serviceClass)
+//        }
+
+//        return Retrofit.Builder()
+//            .baseUrl(baseUrl)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .client(okHttpClientBuilder.build())
+//            .build()
+//            .create(serviceClass)
     }
 
 }
