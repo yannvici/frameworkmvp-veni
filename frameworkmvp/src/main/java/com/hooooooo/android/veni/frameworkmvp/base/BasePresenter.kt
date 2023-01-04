@@ -1,6 +1,11 @@
 package com.hooooooo.android.veni.frameworkmvp.base
 
+import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import java.lang.ref.WeakReference
+import kotlin.LazyThreadSafetyMode.SYNCHRONIZED
 
 /**
  * Created by yann on 2022/10/26
@@ -9,6 +14,7 @@ import java.lang.ref.WeakReference
  */
 abstract class BasePresenter<V : UiCallBack> {
     private lateinit var mWeakReference: WeakReference<V>
+    protected val pCoroutineScope by lazy(SYNCHRONIZED) { CoroutineScope(Dispatchers.Main) }
 
     /**
      * 关联view
@@ -20,10 +26,15 @@ abstract class BasePresenter<V : UiCallBack> {
     /**
      * 分离view
      */
-    fun detach() = mWeakReference.clear()
+    open fun detach() {
+        Log.e("detach", "detachP")
+        mWeakReference.clear()
+        pCoroutineScope.cancel()
+    }
 
     /**
      * 获取view
      */
-    fun getView(): @UnsafeVariance V? = mWeakReference.get()
+    fun getView(): V? = if (::mWeakReference.isInitialized) mWeakReference.get() else null
+
 }

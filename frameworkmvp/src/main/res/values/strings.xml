@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">frameworkMvp</string>
+    <string name="loading">加载中</string>
 </resources>

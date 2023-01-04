@@ -22,10 +22,10 @@ abstract class NetCallBack<T> : Callback<T> {
             if (response.isSuccessful) {
                 val baseResponse = Gson().fromJson(Gson().toJson(response.body()), BaseResponse::class.java)
                 when (baseResponse.code) {
-                    404 -> Log.e(TAG, baseResponse.data.toString())
-                    500 -> Log.e(TAG, baseResponse.data.toString())
+//                    404 -> Log.e(TAG, baseResponse.data.toString())
+//                    500 -> Log.e(TAG, baseResponse.data.toString())
                     else -> {
-                        Log.e(TAG, baseResponse.data.toString())
+//                        Log.e(TAG, baseResponse.data.toString())
                         onSuccess(call, response)
                     }
                 }

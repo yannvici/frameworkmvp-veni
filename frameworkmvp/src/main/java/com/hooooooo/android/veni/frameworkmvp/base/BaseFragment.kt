@@ -14,7 +14,7 @@ import androidx.viewbinding.ViewBinding
  * <p>
  * Describe:
  */
-abstract class BaseFragment<VB : ViewBinding> : Fragment(), UiCallBack {
+abstract class BaseFragment<VB : ViewBinding> (private val inflate: (LayoutInflater) -> VB): Fragment(), UiCallBack {
     protected lateinit var viewBinding: ViewBinding
     protected lateinit var mContext: Context
     override fun onCreate(savedInstanceState: Bundle?) {

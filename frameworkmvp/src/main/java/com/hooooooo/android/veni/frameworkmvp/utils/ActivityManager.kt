@@ -2,6 +2,7 @@ package com.hooooooo.android.veni.frameworkmvp.utils
 
 import android.app.Activity
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Created by yann on 2022/10/26
@@ -10,9 +11,9 @@ import android.util.Log
  */
 object ActivityManager {
     private const val TAG: String = "ActivityManager"
-    private val activityStack: ArrayList<Activity> = ArrayList()
+    private val activityStack: ArrayList<AppCompatActivity> = ArrayList()
 
-    fun addActivity(activity: Activity) {
+    fun addActivity(activity: AppCompatActivity) {
         if (!activityStack.contains(activity)) {
             activityStack.add(activity)
         } else {
@@ -20,7 +21,7 @@ object ActivityManager {
         }
     }
 
-    fun removeActivity(activity: Activity) {
+    fun removeActivity(activity: AppCompatActivity) {
         if (activityStack.contains(activity)) {
             activityStack.remove(activity)
         } else {
@@ -37,5 +38,5 @@ object ActivityManager {
         }
     }
 
-    fun getTaskTop(): Activity = activityStack[activityStack.size - 1]
+    fun getTaskTop(): AppCompatActivity? = if (activityStack.size > 0) activityStack[activityStack.size - 1] else null
 }

@@ -32,7 +32,6 @@ class RecyclerDiffAdapter :
             itemViewBinding.tes.text = getItem(position)
             itemView.setOnClickListener {
                 Toast.makeText(mContext, getItem(position), Toast.LENGTH_SHORT).show()
-
             }
         }
     }
