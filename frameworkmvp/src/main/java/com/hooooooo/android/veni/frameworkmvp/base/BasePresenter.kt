@@ -1,9 +1,14 @@
 package com.hooooooo.android.veni.frameworkmvp.base
 
 import android.util.Log
+import com.google.gson.Gson
+import com.hooooooo.android.veni.frameworkmvp.Constants
+import com.hooooooo.android.veni.frameworkmvp.utils.CoroutineManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.withContext
+import okhttp3.Response
 import java.lang.ref.WeakReference
 import kotlin.LazyThreadSafetyMode.SYNCHRONIZED
 
@@ -12,9 +17,8 @@ import kotlin.LazyThreadSafetyMode.SYNCHRONIZED
  * <p>
  * Describe:
  */
-abstract class BasePresenter<V : UiCallBack> {
+abstract class BasePresenter<V : BaseActivity<*>> {
     private lateinit var mWeakReference: WeakReference<V>
-    protected val pCoroutineScope by lazy(SYNCHRONIZED) { CoroutineScope(Dispatchers.Main) }
 
     /**
      * 关联view
@@ -27,9 +31,7 @@ abstract class BasePresenter<V : UiCallBack> {
      * 分离view
      */
     open fun detach() {
-        Log.e("detach", "detachP")
         mWeakReference.clear()
-        pCoroutineScope.cancel()
     }
 
     /**
@@ -37,4 +39,50 @@ abstract class BasePresenter<V : UiCallBack> {
      */
     fun getView(): V? = if (::mWeakReference.isInitialized) mWeakReference.get() else null
 
+    protected suspend inline fun <T> getResult(crossinline block: suspend () -> Result<T>): Result<T> =
+        withContext(CoroutineScope(Dispatchers.Main).coroutineContext) {
+            block()
+        }
+
+    protected suspend inline fun <T> getResponseString(crossinline block: suspend () -> T): T? =
+        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+            block()
+        }
+
+    protected suspend inline fun <reified T> getDataResponse(crossinline result: suspend () -> Result<Response>): T? {
+        getView()?.showLoading()
+        val resultData = withContext(CoroutineScope(Dispatchers.Main).coroutineContext) {
+            result()
+        }
+        return if (resultData.isSuccess) {
+            getView()?.hideLoading()
+            val data = CoroutineManager.ioCoroutineDispatcher {
+                Gson().fromJson(resultData.getOrNull()?.body?.string(), T::class.java)
+            }
+            Log.e("data==", data.toString())
+            if (resultData.getOrNull()?.isSuccessful == true) {
+                data
+            } else {
+                getView()?.abnormalNet()
+                null
+            }
+        } else {
+            getView()?.apply {
+                hideLoading()
+                abnormalNet()
+            }
+            null
+        }
+    }
+
+    protected inline fun <reified T> getData(response: BaseResponse, crossinline block: () -> T?) =
+        if (response.code == 200) {
+            block()
+        } else {
+            getView()?.apply {
+                hideLoading()
+                abnormalData(response.msg ?: Constants.UNKNOWN)
+            }
+            null
+        }
 }

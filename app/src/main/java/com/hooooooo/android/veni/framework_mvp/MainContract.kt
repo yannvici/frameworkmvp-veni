@@ -22,6 +22,34 @@ class MainContract {
             callBAck.test("fff")
         }
 
+        suspend fun requestCopyWriting2(): String {
+            getView()?.showLoading()
+            val result = withContext(pCoroutineScope.coroutineContext) {
+                model.requestCopyWriting3()
+            }
+            return if (result.isSuccess) {
+                getView()?.hideLoading()
+                val data = Gson().fromJson(result.getOrNull()?.body?.string(), BaseResponse::class.java)
+                if (result.getOrNull()?.isSuccessful == true) {
+                    if (data.code == 200) {
+                        data.result?.content ?: ""
+                    } else {
+                        getView()?.showToastDialog(data.msg)
+                        ""
+                    }
+                } else {
+                    "sss"
+                }
+            } else {
+                getView()?.hideLoading()
+                result.onFailure {
+                    it.message?.let { it1 ->
+                        getView()?.showToastDialog(it1)
+                    }
+                }
+                "网路错误"
+            }
+        }
 
         suspend fun requestCopyWriting(): String {
             getView()?.showLoading()

@@ -5,4 +5,7 @@ package com.hooooooo.android.veni.frameworkmvp.base
  * <p>
  * Describe:
  */
-data class BaseResponse(val code: Int, val message: String, val data: Any?)
+abstract class BaseResponse {
+    open val code: Int? by lazy { null }
+    open val msg: String? by lazy { null }
+}

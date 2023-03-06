@@ -57,6 +57,11 @@ class MainModel : BaseModel() {
         OkHttpClientUtil.createPostCall("https://apis.tianapi.com/pyqwenan/index",
             RequestParam().apply { put("key", "7981f801f36ce8d416a39631ef9bc0af") }
         ).execute()
+    }
 
+    suspend fun requestCopyWriting3() = fire {
+        OkHttpClientUtil.createPostCall("https://apis.tianapi.com/pyqwenan/index",
+            RequestParam().apply { put("key", "7981f801f36ce8d416a39631ef9bc0af") }
+        ).execute()
     }
 }

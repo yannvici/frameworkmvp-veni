@@ -1,5 +1,6 @@
 package com.hooooooo.android.veni.frameworkmvp.base
 
+import android.content.Intent
 import android.os.Bundle
 import com.hooooooo.android.veni.frameworkmvp.entry.StatusBarTheme
 
@@ -16,7 +17,9 @@ interface UiCallBack {
     fun initData(savedInstanceState: Bundle?) = Unit
 
     /**
-     * 设置状态栏主题
+     * 画面跳转带过渡动画
+     *
+     * @param intent 跳转意图
      */
-    fun setStatusBarTheme(): StatusBarTheme
+    fun startTransitionActivity(intent: Intent)
 }

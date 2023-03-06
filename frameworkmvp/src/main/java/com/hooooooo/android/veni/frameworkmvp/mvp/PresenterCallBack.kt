@@ -1,5 +1,6 @@
 package com.hooooooo.android.veni.frameworkmvp.mvp
 
+import com.hooooooo.android.veni.frameworkmvp.base.BaseActivity
 import com.hooooooo.android.veni.frameworkmvp.base.BasePresenter
 import com.hooooooo.android.veni.frameworkmvp.base.UiCallBack
 
@@ -8,7 +9,7 @@ import com.hooooooo.android.veni.frameworkmvp.base.UiCallBack
  * <p>
  * Describe:
  */
-interface PresenterCallBack<V : UiCallBack, P : BasePresenter<V>> {
+interface PresenterCallBack<V : BaseActivity<*>, P : BasePresenter<V>> {
     /**
      * 创建presenter
      */
