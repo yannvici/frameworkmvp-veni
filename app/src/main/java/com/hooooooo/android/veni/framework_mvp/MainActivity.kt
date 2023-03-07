@@ -6,10 +6,10 @@ import android.os.*
 import android.util.Base64
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.hooooooo.android.veni.framework_mvp.MainContract.MainPresenter
 import com.hooooooo.android.veni.framework_mvp.databinding.ActivityMainBinding
 import com.hooooooo.android.veni.frameworkmvp.mvp.MvpActivity
 import com.hooooooo.android.veni.frameworkmvp.net.ServiceGenerator
@@ -20,8 +20,8 @@ import javax.crypto.KeyGenerator
 
 class MainActivity : MvpActivity<MainActivity, ActivityMainBinding, MainPresenter>(
     ActivityMainBinding::inflate,
-    Color.WHITE,
-    true
+    Color.parseColor("#FF3700B3"),
+    false
 ) {
     private val progressDialog: ProgressDialog by lazy {
         ProgressDialog(this).apply {
@@ -74,12 +74,8 @@ class MainActivity : MvpActivity<MainActivity, ActivityMainBinding, MainPresente
             Log.e("coroutineContext1", coroutineContext.toString())
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
 //                viewBinding.main.text = presenter.requestCopyWriting2()
-                val n: String? = presenter.requestCopyWriting2()
-                n?.apply {
-                    viewBinding.main.setText(n)
-                } ?: run {
-                    viewBinding.main.setText("FFF")
-                }
+                val n: String = presenter.requestCopyWriting()
+                viewBinding.main.text = n
             }
         }
         viewBinding.main.setOnClickListener {

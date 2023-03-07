@@ -1,5 +1,6 @@
 package com.hooooooo.android.veni.frameworkmvp.base
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Response
@@ -10,8 +11,8 @@ import okhttp3.Response
  * Describe:
  */
 abstract class BaseModel : IModel {
-    suspend fun fire(block: suspend () -> Response): Result<Response> = kotlin.runCatching {
-        withContext(Dispatchers.IO) {
+    suspend inline fun fire(crossinline block: suspend () -> Response): Result<Response> = kotlin.runCatching {
+        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
             block()
         }
     }

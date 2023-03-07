@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
  * Describe:
  */
 object CoroutineManager {
+
     suspend inline fun <T> mainCoroutineDispatcher(crossinline block: () -> T) =
         withContext(CoroutineScope(Dispatchers.Main).coroutineContext) {
             block.invoke()

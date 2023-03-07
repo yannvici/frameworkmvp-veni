@@ -6,5 +6,5 @@ package com.hooooooo.android.veni.frameworkmvp.base
  * Describe:
  */
 interface IModel {
-    fun destroy()
+
 }
