@@ -3,7 +3,6 @@ package com.hooooooo.android.veni.framework_mvp
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -18,7 +17,6 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.ViewCompat
 import java.text.NumberFormat
 
 /**

@@ -1,5 +1,7 @@
 package com.hooooooo.android.veni.frameworkmvp.net
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,6 +19,29 @@ object ServiceGenerator {
     private var connectTimeOut: Long = 1000
     private var readTimeOut: Long = 1000
     private var writeTimeOut: Long = 1000
+    private val gson: Gson by lazy { GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create() }
+    private val httpLoggingInterceptor by lazy { HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY } }
+    private val okHttpClientBuilder: OkHttpClient.Builder by lazy {
+        OkHttpClient.Builder().apply {
+            addInterceptor {
+                it.proceed(
+                    it.request()
+                        .newBuilder()
+                        .addHeader("User-Agent", "Mobile")
+                        .build()
+                )
+            }
+            addInterceptor(httpLoggingInterceptor)
+            //设置超时时间
+            connectTimeout(connectTimeOut, TimeUnit.MILLISECONDS)
+            readTimeout(readTimeOut, TimeUnit.MILLISECONDS)
+            writeTimeout(writeTimeOut, TimeUnit.MILLISECONDS)
+            //支持重定向
+            followRedirects(true)
+            //https支持
+            hostnameVerifier((HostnameVerifier { _, _ -> true }))
+        }
+    }
 
     /**
      * 设置服务器地址，建议在 Application 中初始化
@@ -53,55 +78,14 @@ object ServiceGenerator {
     /**
      * 创建service实例
      */
-    fun <T> createService(serviceClass: Class<T>): T? {
-        val okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        okHttpClientBuilder.apply {
-            addInterceptor {
-                it.proceed(
-                    it.request()
-                        .newBuilder()
-                        .addHeader("User-Agent", "Mobile")
-                        .build()
-                )
-            }
-            addInterceptor(httpLoggingInterceptor)
-            //设置超时时间
-            connectTimeout(connectTimeOut, TimeUnit.MILLISECONDS)
-            readTimeout(readTimeOut, TimeUnit.MILLISECONDS)
-            writeTimeout(writeTimeOut, TimeUnit.MILLISECONDS)
-            //支持重定向
-            followRedirects(true)
-            //https支持
-            hostnameVerifier((HostnameVerifier { _, _ -> true }))
-        }
-        return if (::baseUrl.isInitialized) {
-            Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClientBuilder.build())
-                .build()
-                .create(serviceClass)
-        } else {
-            null
-        }
-
-//        return baseUrl?.let {
-//            Retrofit.Builder()
-//                .baseUrl(it)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .client(okHttpClientBuilder.build())
-//                .build()
-//                .create(serviceClass)
-//        }
-
-//        return Retrofit.Builder()
-//            .baseUrl(baseUrl)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .client(okHttpClientBuilder.build())
-//            .build()
-//            .create(serviceClass)
+    fun <T> createService(serviceClass: Class<T>): T = if (::baseUrl.isInitialized) {
+        Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClientBuilder.build())
+            .build()
+            .create(serviceClass)
+    } else {
+        throw NotImplementedError("baseUrl is intrinsic")
     }
-
 }

@@ -106,7 +106,6 @@ object DialogManager {
     fun closeLoadingDialog() = ActivityManager.getTaskTop()?.apply {
         runOnUiThread { loadingDialog?.apply { if (isShowing) hide() } }
         Log.e("closeLoadingDialog", "closeLoadingDialog")
-//        loadingDialog?.apply { if (isShowing) hide() }
     }
 
     fun dialogDismiss() {

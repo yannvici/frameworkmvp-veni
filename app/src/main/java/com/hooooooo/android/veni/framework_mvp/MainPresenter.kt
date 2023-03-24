@@ -8,17 +8,15 @@ import com.hooooooo.android.veni.frameworkmvp.base.BasePresenter
  * Describe:
  */
 
-class MainPresenter(private val model: MainModel = MainModel()) : BasePresenter<MainActivity>() {
-    suspend fun requestCopyWriting(): String {
-        val result = getDataResponse<CopyWritingResponse> {
-            model.requestCopyWriting()
+class MainPresenter(private val model: MainModel = MainModel()) : BasePresenter() {
+    suspend fun requestCopyWriting2(): Result<String> = fire(
+        block = {
+            model.requestCopyWriting3()
+        },
+        responseData = {
+            it.result?.content ?: ""
         }
-        return result?.let {
-            getData(it) {
-                it.result?.content ?: "暂无数据"
-            } ?: "暂无数据"
-        } ?: "暂无数据"
-    }
+    )
 }
 
 

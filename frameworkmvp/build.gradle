@@ -44,9 +44,9 @@ dependencies {
     api 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     //支持okhttp
     api 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
-    api 'com.squareup.retrofit2:retrofit:2.4.0'
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
     api 'com.squareup.retrofit2:converter-gson:2.4.0'
-    api 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'

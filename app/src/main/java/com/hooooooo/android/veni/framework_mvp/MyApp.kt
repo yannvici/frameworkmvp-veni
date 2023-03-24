@@ -9,9 +9,15 @@ import com.hooooooo.android.veni.frameworkmvp.net.ServiceGenerator
  * Describe:
  */
 class MyApp : Application() {
+    companion object {
+        private lateinit var instance: MyApp
+        fun getInstance(): MyApp = if (::instance.isInitialized) instance else throw NotImplementedError("instance is not initialized")
+    }
+
     override fun onCreate() {
         super.onCreate()
-        ServiceGenerator.initBaseUrl("https://free-api.heweather.net")
+        instance = this
+        ServiceGenerator.initBaseUrl("https://apis.tianapi.com/")
             .initConnectTimeOut(1000)
             .initReadTimeOut(1000)
             .initWriteTimeOut(1000)
