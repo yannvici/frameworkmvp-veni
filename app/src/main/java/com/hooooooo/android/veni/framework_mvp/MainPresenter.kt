@@ -19,6 +19,14 @@ class MainPresenter(private val model: MainModel = MainModel()) : BasePresenter<
             } ?: "暂无数据"
         } ?: "暂无数据"
     }
+
+    suspend fun requestCopyWriting1(): Result<String> = fire(
+        block = {
+            model.requestCopyWriting1()
+        }
+    ) {
+        it.result?.content ?: ""
+    }
 }
 
 

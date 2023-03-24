@@ -6,11 +6,10 @@ import com.hooooooo.android.veni.frameworkmvp.Constants
 import com.hooooooo.android.veni.frameworkmvp.utils.CoroutineManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.withContext
 import okhttp3.Response
 import java.lang.ref.WeakReference
-import kotlin.LazyThreadSafetyMode.SYNCHRONIZED
+import java.text.ParseException
 
 /**
  * Created by yann on 2022/10/26
@@ -85,4 +84,24 @@ abstract class BasePresenter<V : BaseActivity<*>> {
             }
             null
         }
+
+    protected suspend inline fun <T : BaseResponse, R> fire(crossinline block: suspend () -> T, crossinline responseData: (T) -> R): Result<R> =
+        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+            runCatching {
+                block()
+            }.fold(
+                onSuccess = {
+                    if (it.code == 200) {
+                        val data = responseData(it)
+                        Result.success(data)
+                    } else {
+                        Result.failure(Exception(it.msg ?: Constants.UNKNOWN))
+                    }
+                },
+                onFailure = {
+                    Result.failure(it)
+                }
+            )
+        }
+
 }

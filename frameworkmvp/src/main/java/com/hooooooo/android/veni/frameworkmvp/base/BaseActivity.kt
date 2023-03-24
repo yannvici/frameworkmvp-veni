@@ -173,6 +173,11 @@ abstract class BaseActivity<VB : ViewBinding>(
      * 关闭加载画面
      */
     private fun closeLoadingDialog() = runOnUiThread { loadingDialog.hide() }
+    protected suspend inline fun <T> loadData(crossinline block: suspend () -> T) {
+        showLoading()
+        block()
+        hideLoading()
+    }
 
     /**
      * 关闭软键盘

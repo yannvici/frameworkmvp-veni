@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.hooooooo.android.veni.framework_mvp.databinding.ActivityMainBinding
+import com.hooooooo.android.veni.frameworkmvp.Constants
 import com.hooooooo.android.veni.frameworkmvp.mvp.MvpActivity
 import com.hooooooo.android.veni.frameworkmvp.net.ServiceGenerator
 import kotlinx.coroutines.launch
@@ -73,9 +74,11 @@ class MainActivity : MvpActivity<MainActivity, ActivityMainBinding, MainPresente
         lifecycleScope.launch {
             Log.e("coroutineContext1", coroutineContext.toString())
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewBinding.main.text = presenter.requestCopyWriting2()
-                val n: String = presenter.requestCopyWriting()
-                viewBinding.main.text = n
+                loadData {
+                    viewBinding.main.text = presenter.requestCopyWriting1().onFailure {
+                        showToastDialog(it.message ?: Constants.UNKNOWN)
+                    }.getOrNull() ?: ""
+                }
             }
         }
         viewBinding.main.setOnClickListener {
